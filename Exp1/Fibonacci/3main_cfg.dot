@@ -1,0 +1,41 @@
+digraph main_cfg {
+  graph [rankdir=LR, splines=true, bgcolor="#ffffff"];
+  node [shape=plaintext, fontname="DejaVu Sans Mono", fontsize=10];
+
+  entry [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
+      <TR><TD BGCOLOR="#c8e6c9"><B>entry</B></TD></TR>
+      <TR><TD ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="monospace">alloca a,b,i,t,n<br/>a = 0; b = 1; i = 1<br/>n = call getint()<br/>putint(a); putch(10)<br/>putint(b); putch(10)</FONT></TD></TR>
+    </TABLE>
+  >];
+
+  cond [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
+      <TR><TD BGCOLOR="#fff9c4"><B>while.cond</B></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="monospace">i_val = load i<br/>n_val = load n<br/>cmp = i_val &lt; n_val</FONT></TD></TR>
+    </TABLE>
+  >];
+
+  body [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
+      <TR><TD BGCOLOR="#bbdefb"><B>while.body</B></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="monospace">t = b<br/>b = a + b<br/>putint(b); putch(10)<br/>a = t<br/>i = i + 1</FONT></TD></TR>
+    </TABLE>
+  >];
+
+  end [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
+      <TR><TD BGCOLOR="#ffcdd2"><B>while.end</B></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="monospace">ret 0</FONT></TD></TR>
+    </TABLE>
+  >];
+
+  /* layout and edges */
+  entry -> cond [arrowhead="vee", color="#2e7d32"];
+  cond -> body [label="true", fontcolor="#1b5e20", color="#1e88e5"];
+  cond -> end [label="false", fontcolor="#b71c1c", color="#e53935"];
+  body -> cond [arrowhead="vee", color="#1e88e5"];
+
+  /* group styling */
+  { rank = same; entry; cond; body; end; }
+}

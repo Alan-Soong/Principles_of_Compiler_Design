@@ -1,0 +1,54 @@
+digraph compiler_workflow {
+    rankdir=TB;
+    
+    // 基本样式 - 避免使用HTML标签
+    node [shape=rectangle, style=filled, fillcolor=lightblue, fontsize=12];
+    edge [fontsize=10];
+    
+    // 标题 - 使用纯文本
+    labelloc="t";
+    label="Compiler Workflow";
+    fontsize=16;
+    
+    // 输入输出节点
+    start [shape=ellipse, fillcolor=green, label="Source Code\nmain.c"];
+    end [shape=ellipse, fillcolor=red, label="Executable File\na.out"];
+    
+    // 主要处理步骤 - 使用简单的换行符
+    preprocess [label="Preprocessing\nHeader Expansion\nMacro Substitution\nConditional Compilation"];
+    compile [label="Compilation\nLexical Analysis\nSyntax Analysis\nSemantic Analysis\nIR Generation"];
+    assemble [label="Assembly\nMachine Code Generation\nAddress Allocation\nSymbol Resolution"];
+    link [label="Linking\nObject File Merging\nLibrary Linking\nAddress Relocation"];
+    
+    // 中间文件
+    i_file [label="Preprocessed File\nmain.i", shape=ellipse, fillcolor=lightgreen];
+    s_file [label="Assembly File\nmain.s", shape=ellipse, fillcolor=lightgreen];
+    o_file [label="Object File\nmain.o", shape=ellipse, fillcolor=lightgreen];
+    
+    // 连接关系
+    start -> preprocess;
+    preprocess -> i_file [style=dashed, label="generates"];
+    preprocess -> compile;
+    compile -> s_file [style=dashed, label="generates"];
+    compile -> assemble;
+    assemble -> o_file [style=dashed, label="generates"];
+    assemble -> link;
+    link -> end;
+    
+    // 编译命令
+    preprocess_cmd [label="gcc -E main.c -o main.i", shape=plaintext, fontname="Courier"];
+    compile_cmd [label="gcc -S main.i -o main.s", shape=plaintext, fontname="Courier"];
+    assemble_cmd [label="gcc -c main.s -o main.o", shape=plaintext, fontname="Courier"];
+    link_cmd [label="gcc main.o -o a.out", shape=plaintext, fontname="Courier"];
+    
+    // 对齐
+    {rank=same; preprocess; preprocess_cmd}
+    {rank=same; compile; compile_cmd}
+    {rank=same; assemble; assemble_cmd}
+    {rank=same; link; link_cmd}
+    
+    preprocess -> preprocess_cmd [style=invis];
+    compile -> compile_cmd [style=invis];
+    assemble -> assemble_cmd [style=invis];
+    link -> link_cmd [style=invis];
+}

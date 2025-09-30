@@ -1,0 +1,54 @@
+
+main.o:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+0000000000000000 <main>:
+   0:	d100c3ff 	sub	sp, sp, #0x30
+   4:	a9027bfd 	stp	x29, x30, [sp, #32]
+   8:	910083fd 	add	x29, sp, #0x20
+   c:	90000000 	adrp	x0, 0 <__stack_chk_guard>
+  10:	f9400000 	ldr	x0, [x0]
+  14:	f9400001 	ldr	x1, [x0]
+  18:	f9000fe1 	str	x1, [sp, #24]
+  1c:	d2800001 	mov	x1, #0x0                   	// #0
+  20:	910033e0 	add	x0, sp, #0xc
+  24:	aa0003e1 	mov	x1, x0
+  28:	90000000 	adrp	x0, 0 <main>
+  2c:	91000000 	add	x0, x0, #0x0
+  30:	94000000 	bl	0 <__isoc99_scanf>
+  34:	52800040 	mov	w0, #0x2                   	// #2
+  38:	b90013e0 	str	w0, [sp, #16]
+  3c:	52800020 	mov	w0, #0x1                   	// #1
+  40:	b90017e0 	str	w0, [sp, #20]
+  44:	14000008 	b	64 <main+0x64>
+  48:	b94017e1 	ldr	w1, [sp, #20]
+  4c:	b94013e0 	ldr	w0, [sp, #16]
+  50:	1b007c20 	mul	w0, w1, w0
+  54:	b90017e0 	str	w0, [sp, #20]
+  58:	b94013e0 	ldr	w0, [sp, #16]
+  5c:	11000400 	add	w0, w0, #0x1
+  60:	b90013e0 	str	w0, [sp, #16]
+  64:	b9400fe0 	ldr	w0, [sp, #12]
+  68:	b94013e1 	ldr	w1, [sp, #16]
+  6c:	6b00003f 	cmp	w1, w0
+  70:	54fffecd 	b.le	48 <main+0x48>
+  74:	b94017e1 	ldr	w1, [sp, #20]
+  78:	90000000 	adrp	x0, 0 <main>
+  7c:	91000000 	add	x0, x0, #0x0
+  80:	94000000 	bl	0 <printf>
+  84:	52800000 	mov	w0, #0x0                   	// #0
+  88:	2a0003e1 	mov	w1, w0
+  8c:	90000000 	adrp	x0, 0 <__stack_chk_guard>
+  90:	f9400000 	ldr	x0, [x0]
+  94:	f9400fe3 	ldr	x3, [sp, #24]
+  98:	f9400002 	ldr	x2, [x0]
+  9c:	eb020063 	subs	x3, x3, x2
+  a0:	d2800002 	mov	x2, #0x0                   	// #0
+  a4:	54000040 	b.eq	ac <main+0xac>  // b.none
+  a8:	94000000 	bl	0 <__stack_chk_fail>
+  ac:	2a0103e0 	mov	w0, w1
+  b0:	a9427bfd 	ldp	x29, x30, [sp, #32]
+  b4:	9100c3ff 	add	sp, sp, #0x30
+  b8:	d65f03c0 	ret

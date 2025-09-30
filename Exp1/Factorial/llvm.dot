@@ -1,0 +1,148 @@
+digraph LLVMArchitecture {
+    rankdir=TB;
+    compound=true;
+    nodesep=0.2;
+    ranksep=0.3;
+    fontname="Arial";
+    concentrate=true;
+    newrank=true;
+    
+    // 主标题
+    labelloc="t";
+    label=<<B>LLVM IR Architecture</B>>;
+    fontsize=14;
+    
+    // ========== 调整节点尺寸以适应标签 ==========
+    node [fontname="Arial", fontsize=8, fixedsize=false];
+    edge [fontname="Arial", fontsize=7];
+    
+    // ========== 前端层 - 单行排列 ==========
+    subgraph cluster_frontend {
+        label=<<B>Frontend</B>>;
+        color=blue;
+        style=filled;
+        fillcolor=lightblue;
+        margin=8;
+        
+        node [shape=ellipse, style=filled, fillcolor=white, width=1.2, height=0.5];
+        Clang [label="Clang"];
+        Rustc [label="Rustc"];
+        Swiftc [label="Swiftc"];
+        CustomFE [label="Custom"];
+    }
+    
+    // ========== LLVM IR层 - 单行排列 ==========
+    subgraph cluster_middle {
+        label=<<B>LLVM IR</B>>;
+        color=darkgreen;
+        style=filled;
+        fillcolor=lightgreen;
+        margin=8;
+        
+        node [style=filled, fillcolor=white, width=1.0, height=0.5];
+        IRMemory [shape=box, label="Memory IR"];
+        IRBitcode [shape=cylinder, label="Bitcode"];
+        IRText [shape=note, label="Text IR"];
+        Optimizer [shape=component, label="Optimizer"];
+    }
+    
+    // ========== 工具和系统 - 单行排列 ==========
+    {
+        rank=same;
+        Tools [shape=tab, label="Tools", style=filled, fillcolor=lightgray, width=0.8, height=0.4];
+        Systems [shape=ellipse, label="Core Systems", style=filled, fillcolor=thistle, width=1.2, height=0.4];
+    }
+    
+    // ========== 后端处理流程 - 单行排列 ==========
+    subgraph cluster_backend_process {
+        color=darkorange;
+        margin=8;
+        
+        node [shape=component, style=filled, fillcolor=white, width=0.9, height=0.4];
+        InstSelect [label="Inst Select"];
+        RegAlloc [label="Reg Alloc"];
+        Scheduler [label="Scheduler"];
+        CodeGen [label="Code Gen"];
+    }
+    
+    // ========== 目标平台 - 单行排列 ==========
+    subgraph cluster_backend_targets {
+        label=<<B>Backend</B>>;
+        color=brown;
+        style=filled;
+        fillcolor=wheat;
+        margin=8;
+        
+        node [shape=hexagon, style=filled, fillcolor=white, width=0.8, height=0.4];
+        X86 [label="x86"];
+        ARM [label="ARM"];
+        RISC_V [label="RISC-V"];
+        MIPS [label="MIPS"];
+    }
+    
+    // ========== 强制同层级排列 ==========
+    {rank=same; Clang; Rustc; Swiftc; CustomFE;}
+    {rank=same; IRMemory; IRBitcode; IRText; Optimizer;}
+    {rank=same; Tools; Systems;}
+    {rank=same; InstSelect; RegAlloc; Scheduler; CodeGen;}
+    {rank=same; X86; ARM; RISC_V; MIPS;}
+    
+    // ========== 最小化连接关系 ==========
+    
+    // 前端到IR
+    edge [color=blue, style=solid];
+    Clang -> IRMemory;
+    Rustc -> IRMemory;
+    Swiftc -> IRMemory;
+    CustomFE -> IRMemory;
+    
+    // IR格式转换
+    edge [color=darkgreen, style=dashed, minlen=1];
+    IRMemory -> IRBitcode [dir=both];
+    IRMemory -> IRText [dir=both];
+    
+    // 优化流程
+    edge [color=red, style=solid];
+    IRMemory -> Optimizer [dir=both];
+    
+    // 后端处理流程
+    edge [color=brown, style=solid];
+    IRMemory -> InstSelect;
+    InstSelect -> RegAlloc;
+    RegAlloc -> Scheduler;
+    Scheduler -> CodeGen;
+    
+    // 目标平台
+    CodeGen -> X86;
+    CodeGen -> ARM;
+    CodeGen -> RISC_V;
+    CodeGen -> MIPS;
+    
+    // 工具和系统连接
+    edge [color=gray, style=dotted];
+    Tools -> IRMemory;
+    Tools -> IRBitcode;
+    Tools -> IRText;
+    Systems -> IRMemory;
+    Systems -> InstSelect;
+    
+    // ========== 隐形边确保紧凑对齐 ==========
+    edge [style=invis, weight=10];
+    // 前端水平对齐
+    Clang -> Rustc -> Swiftc -> CustomFE;
+    // IR层水平对齐
+    IRMemory -> IRBitcode -> IRText -> Optimizer;
+    // 工具系统水平对齐
+    Tools -> Systems;
+    // 后端处理水平对齐
+    InstSelect -> RegAlloc -> Scheduler -> CodeGen;
+    // 目标平台水平对齐
+    X86 -> ARM -> RISC_V -> MIPS;
+    
+    // ========== 垂直流隐形边 ==========
+    edge [style=invis, weight=1];
+    CustomFE -> IRMemory;
+    Optimizer -> Tools;
+    Systems -> InstSelect;
+    CodeGen -> X86;
+}
